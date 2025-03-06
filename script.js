@@ -1,38 +1,41 @@
-const btn = document.getElementById('btn');
-const output = document.getElementById('output');
+document.addEventListener("DOMContentLoaded", function () {
+    let tbody = document.getElementById("output");
 
-btn.addEventListener("click", () => {
-    const ip = parseInt(document.getElementById('ip').value);
-    new Promise((resolve, reject) => {
-        setTimeout(() => {
-            resolve(ip);
-        }, 2000);
-    })
-    .then((ip) => {
-        output.innerHTML += `Result: ${ip} <br>`;
+    // Show initial loading row
+    tbody.innerHTML = <tr id="loading"><td colspan="2">Loading...</td></tr>;
+
+    function createPromise(index) {
         return new Promise((resolve) => {
-            setTimeout(() => resolve(ip * 2), 2000);
+            let time = (Math.random() * (3 - 1) + 1).toFixed(3); // Random time between 1-3 seconds
+            setTimeout(() => resolve({ index, time }), time * 1000);
         });
-    })
-    .then((ip) => {
-        output.innerHTML += `Result: ${ip} <br>`;
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(ip - 3), 1000);
+    }
+
+    // Create three promises
+    let promises = [createPromise(1), createPromise(2), createPromise(3)];
+
+    // Capture start time
+    let startTime = performance.now();
+
+    Promise.all(promises).then(results => {
+        let endTime = performance.now();
+        let totalTime = ((endTime - startTime) / 1000).toFixed(3); // Total execution time
+
+        tbody.innerHTML = ""; // Clear loading row
+
+        // Sort results by index for better order
+        results.sort((a, b) => a.index - b.index).forEach(result => {
+            let row = `<tr>
+                <td>Promise ${result.index}</td>
+                <td>${result.time}</td>
+            </tr>`;
+            tbody.innerHTML += row;
         });
-    })
-    .then((ip) => {
-        output.innerHTML += `Result: ${ip} <br>`;
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(ip / 2), 1000);
-        });
-    })
-    .then((ip) => {
-        output.innerHTML += `Result: ${ip} <br>`;
-        return new Promise((resolve) => {
-            setTimeout(() => resolve(ip + 10), 1000);
-        });
-    })
-    .then((ip) => {
-        output.innerHTML += `Final Result: ${ip} <br>`;
+
+        // Add total time row
+        tbody.innerHTML += `<tr>
+            <td><strong>Total</strong></td>
+            <td><strong>${totalTime}</strong></td>
+        </tr>`;
     });
 });

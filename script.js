@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let tbody = document.getElementById("output");
 
     // Show initial loading row
-    tbody.innerHTML = <tr id="loading"><td colspan="2">Loading...</td></tr>;
+    tbody.innerHTML = `<tr id="loading"><td colspan="2">Loading...</td></tr>`;
 
     function createPromise(index) {
         return new Promise((resolve) => {
@@ -25,17 +25,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         // Sort results by index for better order
         results.sort((a, b) => a.index - b.index).forEach(result => {
-            let row = `<tr>
-                <td>Promise ${result.index}</td>
-                <td>${result.time}</td>
-            </tr>`;
+            let row = `<tr> <td>Promise ${result.index}</td> <td>${result.time}</td> </tr>`;
             tbody.innerHTML += row;
         });
 
         // Add total time row
-        tbody.innerHTML += `<tr>
-            <td><strong>Total</strong></td>
-            <td><strong>${totalTime}</strong></td>
-        </tr>`;
+        tbody.innerHTML += `<tr> <td><strong>Total</strong></td> <td><strong>${totalTime}</strong></td> </tr>`;
     });
 });

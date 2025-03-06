@@ -1,42 +1,33 @@
-//your JS code here. If required.
-document.addEventListener("DOMContentLoaded", function () {
-    let tbody = document.getElementById("output");
-
-    // Show initial loading row
-    tbody.innerHTML = <tr id="loading"><td colspan="2">Loading...</td></tr>;
-
-    function createPromise(index) {
-        return new Promise((resolve) => {
-            let time = (Math.random() * (3 - 1) + 1).toFixed(3); // Random time between 1-3 seconds
-            setTimeout(() => resolve({ index, time }), time * 1000);
-        });
-    }
-
-    // Create three promises
-    let promises = [createPromise(1), createPromise(2), createPromise(3)];
-
-    // Capture start time
-    let startTime = performance.now();
-
-    Promise.all(promises).then(results => {
-        let endTime = performance.now();
-        let totalTime = ((endTime - startTime) / 1000).toFixed(3); // Total execution time
-
-        tbody.innerHTML = ""; // Clear loading row
-
-        // Sort results by index for better order
-        results.sort((a, b) => a.index - b.index).forEach(result => {
-            let row = `<tr>
-                <td>Promise ${result.index}</td>
-                <td>${result.time}</td>
-            </tr>`;
-            tbody.innerHTML += row;
-        });
-
-        // Add total time row
-        tbody.innerHTML += `<tr>
-            <td><strong>Total</strong></td>
-            <td><strong>${totalTime}</strong></td>
-        </tr>`;
+function createPromise(id) {
+    return new Promise((resolve) => {
+        const delay = Math.floor(Math.random() * 2000) + 1000; // Random delay between 1 and 3 seconds
+        setTimeout(() => {
+            resolve({ id, delay: delay / 1000 });
+        }, delay);
     });
+}
+
+function updateTable(results) {
+    const output = document.getElementById("output");
+    output.innerHTML = ""; // Clear the loading message
+
+    results.forEach((result) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>Promises ${result.id}</td>
+            <td>${result.delay}</td>
+        `;
+        output.appendChild(row);
+    });
+
+    const totalRow = document.createElement("tr");
+    totalRow.innerHTML = `
+        <td>Total</td>
+        <td>${Math.max(...results.map((result) => result.delay)).toFixed(3)}</td>
+    `;
+    output.appendChild(totalRow);
+}
+
+Promise.all([createPromise(1), createPromise(2), createPromise(3)]).then((results) => {
+    updateTable(results);
 });

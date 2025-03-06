@@ -1,33 +1,38 @@
-function createPromise(id) {
-    return new Promise((resolve) => {
-        const delay = Math.floor(Math.random() * 2000) + 1000; // Random delay between 1 and 3 seconds
+const btn = document.getElementById('btn');
+const output = document.getElementById('output');
+
+btn.addEventListener("click", () => {
+    const ip = parseInt(document.getElementById('ip').value);
+    new Promise((resolve, reject) => {
         setTimeout(() => {
-            resolve({ id, delay: delay / 1000 });
-        }, delay);
+            resolve(ip);
+        }, 2000);
+    })
+    .then((ip) => {
+        output.innerHTML += `Result: ${ip} <br>`;
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(ip * 2), 2000);
+        });
+    })
+    .then((ip) => {
+        output.innerHTML += `Result: ${ip} <br>`;
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(ip - 3), 1000);
+        });
+    })
+    .then((ip) => {
+        output.innerHTML += `Result: ${ip} <br>`;
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(ip / 2), 1000);
+        });
+    })
+    .then((ip) => {
+        output.innerHTML += `Result: ${ip} <br>`;
+        return new Promise((resolve) => {
+            setTimeout(() => resolve(ip + 10), 1000);
+        });
+    })
+    .then((ip) => {
+        output.innerHTML += `Final Result: ${ip} <br>`;
     });
-}
-
-function updateTable(results) {
-    const output = document.getElementById("output");
-    output.innerHTML = ""; // Clear the loading message
-
-    results.forEach((result) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>Promises ${result.id}</td>
-            <td>${result.delay}</td>
-        `;
-        output.appendChild(row);
-    });
-
-    const totalRow = document.createElement("tr");
-    totalRow.innerHTML = `
-        <td>Total</td>
-        <td>${Math.max(...results.map((result) => result.delay)).toFixed(3)}</td>
-    `;
-    output.appendChild(totalRow);
-}
-
-Promise.all([createPromise(1), createPromise(2), createPromise(3)]).then((results) => {
-    updateTable(results);
 });

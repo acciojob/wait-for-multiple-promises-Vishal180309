@@ -1,16 +1,8 @@
-/*  your css code here. If applicable */
-table {
-    border-collapse: collapse;
-    width: 50%;
-    margin: 20px auto;
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-}
-
-th {
-    background-color: #f0f0f0;
+#output {
+    margin-top: 20px;
 }
